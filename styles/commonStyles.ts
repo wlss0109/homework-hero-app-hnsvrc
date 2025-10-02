@@ -2,14 +2,19 @@
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
 export const colors = {
-  background: '#F5F5DC',      // Beige
-  text: '#2E294E',            // Dark Indigo
-  textSecondary: '#6E798C',   // Grayish Blue
-  primary: '#6C63FF',         // Bright Purple
-  secondary: '#F72585',       // Vivid Pink
-  accent: '#4CC9F0',          // Vibrant Cyan
-  card: '#FFFFFF',            // White
-  highlight: '#FFF59D',       // Pale Yellow
+  background: '#121212',      // Dark Background
+  text: '#FFFFFF',            // White Text
+  textSecondary: '#B3B3B3',   // Light Gray
+  primary: '#BB86FC',         // Purple Primary
+  secondary: '#03DAC6',       // Teal Secondary
+  accent: '#CF6679',          // Pink Accent
+  card: '#1E1E1E',            // Dark Card Background
+  highlight: '#2C2C2C',       // Darker Highlight
+  surface: '#1F1F1F',         // Surface Color
+  border: '#333333',          // Border Color
+  success: '#4CAF50',         // Success Green
+  warning: '#FF9800',         // Warning Orange
+  error: '#F44336',           // Error Red
 };
 
 export const buttonStyles = StyleSheet.create({
@@ -20,7 +25,7 @@ export const buttonStyles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0px 4px 12px rgba(108, 99, 255, 0.3)',
+    boxShadow: '0px 4px 12px rgba(187, 134, 252, 0.3)',
     elevation: 4,
   },
   secondary: {
@@ -30,7 +35,7 @@ export const buttonStyles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0px 4px 12px rgba(247, 37, 133, 0.3)',
+    boxShadow: '0px 4px 12px rgba(3, 218, 198, 0.3)',
     elevation: 4,
   },
   accent: {
@@ -40,7 +45,7 @@ export const buttonStyles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0px 4px 12px rgba(76, 201, 240, 0.3)',
+    boxShadow: '0px 4px 12px rgba(207, 102, 121, 0.3)',
     elevation: 4,
   },
   outline: {
@@ -122,7 +127,7 @@ export const commonStyles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     width: '100%',
-    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.3)',
     elevation: 4,
   },
   input: {
@@ -132,7 +137,7 @@ export const commonStyles = StyleSheet.create({
     fontSize: 16,
     color: colors.text,
     borderWidth: 1,
-    borderColor: colors.textSecondary + '40',
+    borderColor: colors.border,
     width: '100%',
     minHeight: 120,
     textAlignVertical: 'top',
@@ -140,7 +145,7 @@ export const commonStyles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.card,
+    color: colors.background,
   },
   buttonTextOutline: {
     fontSize: 16,
