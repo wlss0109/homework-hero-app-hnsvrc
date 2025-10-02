@@ -1,79 +1,57 @@
-import React from "react";
-import { Stack, Link } from "expo-router";
-import { FlatList, Pressable, StyleSheet, View, Text, Alert, Platform } from "react-native";
-import { IconSymbol } from "@/components/IconSymbol";
-import { GlassView } from "expo-glass-effect";
-import { useTheme } from "@react-navigation/native";
 
-const ICON_COLOR = "#007AFF";
+import React, { useState } from "react";
+import { Stack, router } from "expo-router";
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  ScrollView, 
+  TextInput, 
+  TouchableOpacity, 
+  Platform,
+  Alert 
+} from "react-native";
+import { IconSymbol } from "@/components/IconSymbol";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { colors, commonStyles, buttonStyles } from "@/styles/commonStyles";
 
 export default function HomeScreen() {
-  const theme = useTheme();
-  const modalDemos = [
-    {
-      title: "Standard Modal",
-      description: "Full screen modal presentation",
-      route: "/modal",
-      color: "#007AFF",
-    },
-    {
-      title: "Form Sheet",
-      description: "Bottom sheet with detents and grabber",
-      route: "/formsheet",
-      color: "#34C759",
-    },
-    {
-      title: "Transparent Modal",
-      description: "Overlay without obscuring background",
-      route: "/transparent-modal",
-      color: "#FF9500",
-    }
-  ];
+  const [question, setQuestion] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const renderModalDemo = ({ item }: { item: (typeof modalDemos)[0] }) => (
-    <GlassView style={[
-      styles.demoCard,
-      Platform.OS !== 'ios' && { backgroundColor: theme.dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
-    ]} glassEffectStyle="regular">
-      <View style={[styles.demoIcon, { backgroundColor: item.color }]}>
-        <IconSymbol name="square.grid.3x3" color="white" size={24} />
-      </View>
-      <View style={styles.demoContent}>
-        <Text style={[styles.demoTitle, { color: theme.colors.text }]}>{item.title}</Text>
-        <Text style={[styles.demoDescription, { color: theme.dark ? '#98989D' : '#666' }]}>{item.description}</Text>
-      </View>
-      <Link href={item.route as any} asChild>
-        <Pressable>
-          <GlassView style={[
-            styles.tryButton,
-            Platform.OS !== 'ios' && { backgroundColor: theme.dark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
-          ]} glassEffectStyle="clear">
-            <Text style={[styles.tryButtonText, { color: theme.colors.primary }]}>Try It</Text>
-          </GlassView>
-        </Pressable>
-      </Link>
-    </GlassView>
-  );
+  const handleSolveQuestion = () => {
+    if (!question.trim()) {
+      Alert.alert('Empty Question', 'Please enter a question to solve.');
+      return;
+    }
+
+    console.log('Solving question:', question);
+    setIsLoading(true);
+    
+    // Navigate to solution screen with the question
+    router.push({
+      pathname: '/solution',
+      params: { question: question.trim() }
+    });
+    
+    setIsLoading(false);
+  };
+
+  const handleImageUpload = () => {
+    Alert.alert(
+      'Image Upload', 
+      'Image upload feature will be available in a future update!',
+      [{ text: 'OK' }]
+    );
+  };
 
   const renderHeaderRight = () => (
-    <Pressable
-      onPress={() => Alert.alert("Not Implemented", "This feature is not implemented yet")}
+    <TouchableOpacity
+      onPress={() => router.push('/profile')}
       style={styles.headerButtonContainer}
     >
-      <IconSymbol name="plus" color={theme.colors.primary} />
-    </Pressable>
-  );
-
-  const renderHeaderLeft = () => (
-    <Pressable
-      onPress={() => Alert.alert("Not Implemented", "This feature is not implemented yet")}
-      style={styles.headerButtonContainer}
-    >
-      <IconSymbol
-        name="gear"
-        color={theme.colors.primary}
-      />
-    </Pressable>
+      <IconSymbol name="person.circle" color={colors.primary} size={24} />
+    </TouchableOpacity>
   );
 
   return (
@@ -81,81 +59,190 @@ export default function HomeScreen() {
       {Platform.OS === 'ios' && (
         <Stack.Screen
           options={{
-            title: "Building the app...",
+            title: "StudyHelper",
+            headerStyle: { backgroundColor: colors.background },
+            headerTintColor: colors.text,
             headerRight: renderHeaderRight,
-            headerLeft: renderHeaderLeft,
           }}
         />
       )}
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <FlatList
-          data={modalDemos}
-          renderItem={renderModalDemo}
-          keyExtractor={(item) => item.route}
+      <SafeAreaView style={[commonStyles.container]} edges={['top']}>
+        <ScrollView
+          style={styles.scrollView}
           contentContainerStyle={[
-            styles.listContainer,
-            Platform.OS !== 'ios' && styles.listContainerWithTabBar
+            styles.contentContainer,
+            Platform.OS !== 'ios' && styles.contentContainerWithTabBar
           ]}
-          contentInsetAdjustmentBehavior="automatic"
           showsVerticalScrollIndicator={false}
-        />
-      </View>
+        >
+          {/* Header Section */}
+          <View style={styles.headerSection}>
+            <View style={styles.iconContainer}>
+              <IconSymbol name="brain.head.profile" size={60} color={colors.primary} />
+            </View>
+            <Text style={commonStyles.title}>StudyHelper</Text>
+            <Text style={commonStyles.textSecondary}>
+              Get instant solutions to any homework question
+            </Text>
+          </View>
+
+          {/* Question Input Section */}
+          <View style={commonStyles.card}>
+            <Text style={styles.sectionTitle}>Enter Your Question</Text>
+            <TextInput
+              style={commonStyles.input}
+              placeholder="Type your homework question here..."
+              placeholderTextColor={colors.textSecondary}
+              value={question}
+              onChangeText={setQuestion}
+              multiline
+              numberOfLines={6}
+              textAlignVertical="top"
+            />
+            
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={[buttonStyles.primary, styles.solveButton]}
+                onPress={handleSolveQuestion}
+                disabled={isLoading}
+              >
+                <IconSymbol name="lightbulb.fill" size={20} color={colors.card} style={styles.buttonIcon} />
+                <Text style={commonStyles.buttonText}>
+                  {isLoading ? 'Solving...' : 'Solve Question'}
+                </Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[buttonStyles.outline, styles.uploadButton]}
+                onPress={handleImageUpload}
+              >
+                <IconSymbol name="camera.fill" size={20} color={colors.primary} style={styles.buttonIcon} />
+                <Text style={commonStyles.buttonTextOutline}>Upload Image</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Features Section */}
+          <View style={styles.featuresSection}>
+            <Text style={styles.sectionTitle}>What We Can Help With</Text>
+            
+            <View style={styles.featureGrid}>
+              <View style={[commonStyles.card, styles.featureCard]}>
+                <IconSymbol name="function" size={32} color={colors.secondary} />
+                <Text style={styles.featureTitle}>Math</Text>
+                <Text style={styles.featureDescription}>
+                  Algebra, Calculus, Geometry, Statistics
+                </Text>
+              </View>
+              
+              <View style={[commonStyles.card, styles.featureCard]}>
+                <IconSymbol name="atom" size={32} color={colors.accent} />
+                <Text style={styles.featureTitle}>Science</Text>
+                <Text style={styles.featureDescription}>
+                  Physics, Chemistry, Biology
+                </Text>
+              </View>
+              
+              <View style={[commonStyles.card, styles.featureCard]}>
+                <IconSymbol name="book.fill" size={32} color={colors.primary} />
+                <Text style={styles.featureTitle}>Literature</Text>
+                <Text style={styles.featureDescription}>
+                  Essays, Analysis, Grammar
+                </Text>
+              </View>
+              
+              <View style={[commonStyles.card, styles.featureCard]}>
+                <IconSymbol name="globe" size={32} color={colors.secondary} />
+                <Text style={styles.featureTitle}>History</Text>
+                <Text style={styles.featureDescription}>
+                  Events, Dates, Analysis
+                </Text>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
-    // backgroundColor handled dynamically
   },
-  listContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+  contentContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 20,
   },
-  listContainerWithTabBar: {
+  contentContainerWithTabBar: {
     paddingBottom: 100, // Extra padding for floating tab bar
   },
-  demoCard: {
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
+  headerSection: {
     alignItems: 'center',
+    marginBottom: 32,
   },
-  demoIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  iconContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: colors.highlight,
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
+    marginBottom: 16,
   },
-  demoContent: {
-    flex: 1,
-  },
-  demoTitle: {
+  sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 4,
-    // color handled dynamically
+    color: colors.text,
+    marginBottom: 16,
+    textAlign: 'center',
   },
-  demoDescription: {
-    fontSize: 14,
-    lineHeight: 18,
-    // color handled dynamically
+  buttonRow: {
+    flexDirection: 'column',
+    gap: 12,
+    marginTop: 16,
+  },
+  solveButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  uploadButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonIcon: {
+    marginRight: 8,
+  },
+  featuresSection: {
+    marginTop: 32,
+  },
+  featureGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  featureCard: {
+    width: '48%',
+    alignItems: 'center',
+    padding: 16,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  featureDescription: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 16,
   },
   headerButtonContainer: {
     padding: 6,
-  },
-  tryButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 6,
-  },
-  tryButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    // color handled dynamically
   },
 });
