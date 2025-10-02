@@ -14,6 +14,7 @@ import {
 import { IconSymbol } from "@/components/IconSymbol";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, commonStyles, buttonStyles } from "@/styles/commonStyles";
+import SGStudyHelperLogo from "@/components/SGStudyHelperLogo";
 
 export default function HomeScreen() {
   const [question, setQuestion] = useState('');
@@ -59,7 +60,7 @@ export default function HomeScreen() {
       {Platform.OS === 'ios' && (
         <Stack.Screen
           options={{
-            title: "StudyHelper",
+            title: "SGStudyHelper",
             headerStyle: { backgroundColor: colors.background },
             headerTintColor: colors.text,
             headerRight: renderHeaderRight,
@@ -77,10 +78,7 @@ export default function HomeScreen() {
         >
           {/* Header Section */}
           <View style={styles.headerSection}>
-            <View style={styles.iconContainer}>
-              <IconSymbol name="brain.head.profile" size={60} color={colors.primary} />
-            </View>
-            <Text style={commonStyles.title}>StudyHelper</Text>
+            <SGStudyHelperLogo size="large" showText={true} />
             <Text style={commonStyles.textSecondary}>
               Get instant solutions to any homework question
             </Text>
@@ -180,15 +178,6 @@ const styles = StyleSheet.create({
   headerSection: {
     alignItems: 'center',
     marginBottom: 32,
-  },
-  iconContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: colors.highlight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 18,
